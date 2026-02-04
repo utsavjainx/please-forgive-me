@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Do You Forgive Me?</title>
+    <style>
+        /* Modern Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffe6e6; /* Soft pink background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; /* Prevents scrollbars when button moves */
+        }
+
+        h1 {
+            color: #d63384;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 2.5rem;
+            padding: 0 20px;
+            z-index: 10;
+        }
+
+        .container {
+            position: relative;
+            text-align: center;
+        }
+
+        /* Button Styling */
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.1s ease;
+            margin: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        #yes-btn {
+            background-color: #20c997;
+            color: white;
+        }
+
+        #yes-btn:hover {
+            transform: scale(1.1);
+            background-color: #1aa179;
+        }
+
+        #no-btn {
+            background-color: #dc3545;
+            color: white;
+            position: absolute; /* Allows free movement */
+            /* Optimization for 120Hz displays */
+            transition: all 0.2s ease-out; 
+            will-change: top, left; 
+        }
+
+        /* Message that appears after clicking Yes */
+        #success-message {
+            display: none;
+            margin-top: 20px;
+            color: #20c997;
+            font-size: 1.5rem;
+            font-weight: bold;
+            animation: popIn 0.5s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .btn { padding: 12px 30px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="main-text">I'm Sorry Do You Forgive me?</h1>
+
+    <div class="container">
+        <button id="yes-btn" class="btn">Yes</button>
+        <button id="no-btn" class="btn">No</button>
+    </div>
+
+    <div id="success-message">
+        Yay! Thank you! ❤️
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('no-btn');
+        const yesBtn = document.getElementById('yes-btn');
+        const mainText = document.getElementById('main-text');
+        const successMsg = document.getElementById('success-message');
+
+        // Function to move the button to a random position
+        function moveButton() {
+            // Get the window dimensions
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+
+            // Get the button dimensions
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+
+            // Calculate random position
+            // We subtract button size to ensure it doesn't clip off the screen
+            const randomX = Math.random() * (windowWidth - btnWidth - 40) + 20; 
+            const randomY = Math.random() * (windowHeight - btnHeight - 40) + 20;
+
+            // Apply new position
+            // We use fixed positioning to break it out of the flex flow completely for the jump
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        }
+
+        // Desktop Interaction: Hover
+        noBtn.addEventListener('mouseover', moveButton);
+
+        // Mobile Interaction: Touch
+        // 'touchstart' fires immediately when a finger touches the screen
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Prevents the actual click from registering
+            moveButton();
+        });
+
+        // Fallback: Click (Just in case they manage to click it)
+        noBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            moveButton();
+        });
+
+        // Logic for the Yes button (Optional polish)
+        yesBtn.addEventListener('click', () => {
+            mainText.innerHTML = "I knew you would! ❤️";
+            noBtn.style.display = 'none'; // Hide the no button
+            yesBtn.style.display = 'none'; // Hide the yes button
+            successMsg.style.display = 'block';
+            
+            // Celebration confetti effect (simple visual cue)
+            document.body.style.backgroundColor = "#d4edda";
+        });
+
+    </script>
+</body>
+</html>
